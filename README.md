@@ -1,6 +1,11 @@
 # Django Bookstore - Full Stack E-commerce Application
 
-A complete full-stack web application for buying and selling used books, built with Django REST Framework backend and React TypeScript frontend.
+A complete full-stack web application (it's a work in progress) for buying and selling used books, built with Django REST Framework backend and React TypeScript frontend.
+
+# To-do:
+- Dockerize
+- Further functions like notifications
+- Test security
 
 ## 🚀 Features
 
