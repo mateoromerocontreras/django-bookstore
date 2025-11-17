@@ -58,3 +58,5 @@ frontend/.DS_Store
 .env.local
 .env.*.local
 
+# Misc
+GIT_INSTRUCTIONS.md
