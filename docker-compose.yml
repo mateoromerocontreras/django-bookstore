@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: bookstore_user
+      POSTGRES_PASSWORD: securepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_DB=bookstore
+      - POSTGRES_USER=bookstore_user
+      - POSTGRES_PASSWORD=securepassword
+      - DB_HOST=db
+      - DB_PORT=5432
+    volumes:
+      - .:/code
+
+volumes:
+  db_data:
