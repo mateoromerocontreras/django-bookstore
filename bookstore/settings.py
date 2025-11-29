@@ -162,13 +162,18 @@ REST_FRAMEWORK = {
 }
 
 # CORS configuration
-CORS_ALLOWED_ORIGINS = os.environ.get(
+cors_origins_env = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
     'http://localhost:3000,http://localhost:5173,http://localhost:8000,http://127.0.0.1:3000,http://127.0.0.1:5173,http://127.0.0.1:8000'
-).split(',')
+)
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_env.split(',') if origin.strip()]
 
 # Only allow all origins in development
 CORS_ALLOW_ALL_ORIGINS = DEBUG
+
+# Additional CORS settings for production
+if not DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -195,10 +200,11 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # CSRF configuration for CORS
-CSRF_TRUSTED_ORIGINS = os.environ.get(
+csrf_origins_env = os.environ.get(
     'CSRF_TRUSTED_ORIGINS',
     'http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173'
-).split(',')
+)
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(',') if origin.strip()]
 
 # Security settings for production
 if not DEBUG:
