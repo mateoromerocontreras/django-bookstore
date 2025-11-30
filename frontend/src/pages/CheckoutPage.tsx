@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
 
+  // All hooks must be called before any early returns
   if (!isAuthenticated) {
     navigate('/login');
     return null;
