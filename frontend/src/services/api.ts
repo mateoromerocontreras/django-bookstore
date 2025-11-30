@@ -5,23 +5,29 @@ import type { ApiError } from '../types';
 // On Render: should be https://django-bookstore-ed1i.onrender.com/api
 // Locally: should be http://localhost:8000/api
 const getApiUrl = (): string => {
+  // First, try environment variable (set at build time)
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) {
+  if (envUrl && envUrl.trim()) {
     return envUrl;
   }
   
-  // If not set, detect based on current origin
+  // Fallback: detect based on current origin (set at runtime)
   if (typeof window !== 'undefined') {
     const origin = window.location.origin;
+    
     // If we're on Render frontend domain, use Render backend
     if (origin.includes('onrender.com')) {
       return 'https://django-bookstore-ed1i.onrender.com/api';
     }
-    // Local development
-    return 'http://localhost:8000/api';
+    
+    // If localhost, use localhost backend
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return 'http://localhost:8000/api';
+    }
   }
   
-  return 'http://localhost:8000/api';
+  // Final fallback - assume production
+  return 'https://django-bookstore-ed1i.onrender.com/api';
 };
 
 const API_BASE_URL = getApiUrl();
