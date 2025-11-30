@@ -24,6 +24,7 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const { data: book, isLoading } = useQuery({
     queryKey: ['book', id],
@@ -62,7 +63,6 @@ export default function BookDetailPage() {
   }
 
   const maxQuantity = Math.min(book.quantity, 10);
-  const [imageError, setImageError] = useState(false);
   const coverUrl = getBookCoverUrl(book.isbn, 'L');
 
   return (

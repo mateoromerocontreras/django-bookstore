@@ -84,70 +84,50 @@ django-bookstore/
 
 ### Prerequisites
 - Docker and Docker Compose
-- Node.js 18+
 - Git
 
 ### Local Development with Docker
 
-The entire application (backend, frontend, and database) is containerized using Docker, which is the recommended way to run it locally.
+The entire application (backend, frontend, and database) is containerized using Docker and Docker Compose, which is the recommended way to run it locally.
 
 1.  **Clone the repository**
-```bash
-git clone https://github.com/your-username/django-bookstore.git
-cd django-bookstore
-```
+    ```bash
+    git clone https://github.com/your-username/django-bookstore.git
+    cd django-bookstore
+    ```
+    *Note: Remember to replace `your-username` with your actual GitHub username if you forked the repository.*
 
-2. **Create virtual environment**
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+2.  **Build and Run the Application**
+    In the root directory of the project, run the following command:
+    ```bash
+    docker-compose up -d --build
+    ```
+    This command will:
+    - Build the Docker images for the backend and frontend services.
+    - Start the containers for the backend, frontend, and PostgreSQL database.
+    - You will see logs from all services in your terminal.
 
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
+    Once the containers are running, the application will be available at:
+    - **Frontend**: `http://localhost:5173`
+    - **Backend API**: `http://localhost:8000`
 
-4. **Run migrations**
-```bash
-python manage.py migrate
-```
+3.  **Run Database Migrations and Other Commands**
+    With the containers running, open a **new terminal window** and use `docker-compose exec` to run commands inside the `backend` service.
 
-5. **Create superuser (optional)**
-```bash
-python manage.py createsuperuser
-```
+    - **Apply database migrations:**
+      ```bash
+      docker-compose exec backend python manage.py migrate
+      ```
 
-6. **Populate database with sample data (optional)**
-```bash
-python manage.py populate_db
-```
+    - **Create a superuser (for Django Admin access):**
+      ```bash
+      docker-compose exec backend python manage.py createsuperuser
+      ```
 
-7. **Run development server**
-```bash
-python manage.py runserver
-```
-
-Backend will be available at `http://localhost:8000`
-
-### Frontend Setup
-
-1. **Navigate to frontend directory**
-```bash
-cd frontend
-```
-
-2. **Install dependencies**
-```bash
-npm install
-```
-
-3. **Run development server**
-```bash
-npm run dev
-```
-
-Frontend will be available at `http://localhost:5173`
+    - **Populate the database with sample data (optional):**
+      ```bash
+      docker-compose exec backend python manage.py populate_db
+      ```
 
 ## 📚 API Endpoints
 

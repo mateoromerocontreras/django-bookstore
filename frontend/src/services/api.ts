@@ -1,8 +1,30 @@
 import axios from 'axios';
 import type { ApiError } from '../types';
 
-// Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Use environment variable for API URL
+// On Render: should be https://django-bookstore-ed1i.onrender.com/api
+// Locally: should be http://localhost:8000/api
+const getApiUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    return envUrl;
+  }
+  
+  // If not set, detect based on current origin
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    // If we're on Render frontend domain, use Render backend
+    if (origin.includes('onrender.com')) {
+      return 'https://django-bookstore-ed1i.onrender.com/api';
+    }
+    // Local development
+    return 'http://localhost:8000/api';
+  }
+  
+  return 'http://localhost:8000/api';
+};
+
+const API_BASE_URL = getApiUrl();
 
 // Function to get CSRF token from cookies
 function getCsrfToken(): string | null {
