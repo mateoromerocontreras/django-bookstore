@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import axios from 'axios';
+import api from './services/api';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -24,9 +24,7 @@ const queryClient = new QueryClient({
 
 // Initialize CSRF token on app load
 function initializeCsrfToken() {
-  axios.get('http://localhost:8000/api/csrf-token/', {
-    withCredentials: true,
-  }).catch((error) => {
+  api.get('/csrf-token/').catch((error) => {
     console.error('Failed to initialize CSRF token:', error);
   });
 }
