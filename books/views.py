@@ -6,11 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import transaction
 from decimal import Decimal
+import logging
 from .models import Author, Editorial, Book, Cart, CartItem
 from .serializers import (
     AuthorSerializer, EditorialSerializer, BookSerializer,
     BookListSerializer, UserSerializer, CartSerializer, CartItemSerializer
 )
+
+logger = logging.getLogger(__name__)
 
 
 class IsOwnerOrReadOnly(IsAuthenticatedOrReadOnly):
@@ -108,7 +111,12 @@ class AuthViewSet(viewsets.ViewSet):
         username = request.data.get('username')
         password = request.data.get('password')
 
+        logger.info(f"Login attempt for username: {username}")
+        logger.info(f"  Remote address: {request.META.get('REMOTE_ADDR')}")
+        logger.info(f"  Origin: {request.META.get('HTTP_ORIGIN')}")
+        
         if not username or not password:
+            logger.warning(f"Login failed: missing credentials")
             return Response(
                 {'error': 'Username and password are required'},
                 status=status.HTTP_400_BAD_REQUEST
@@ -117,9 +125,11 @@ class AuthViewSet(viewsets.ViewSet):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            logger.info(f"Login successful for {username}, session: {request.session.session_key}")
             serializer = UserSerializer(user)
             return Response(serializer.data)
         else:
+            logger.warning(f"Login failed: invalid credentials for {username}")
             return Response(
                 {'error': 'Invalid credentials'},
                 status=status.HTTP_401_UNAUTHORIZED
@@ -132,6 +142,12 @@ class AuthViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
     def user(self, request):
+        logger.info(f"User endpoint accessed")
+        logger.info(f"  Authenticated: {request.user.is_authenticated}")
+        logger.info(f"  User: {request.user.username if request.user.is_authenticated else 'Anonymous'}")
+        logger.info(f"  Session ID: {request.session.session_key}")
+        logger.info(f"  Cookies in request: {list(request.COOKIES.keys())}")
+        logger.info(f"  Auth: {request.META.get('HTTP_AUTHORIZATION')}")
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
 

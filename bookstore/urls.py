@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+import logging
 from django.contrib import admin
 from django.urls import path, include
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -21,10 +22,17 @@ from django.middleware.csrf import get_token
 from django.http import JsonResponse
 from django.conf import settings
 
+logger = logging.getLogger(__name__)
+
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
     token = get_token(request)
+    logger.info(f"CSRF token requested from {request.META.get('REMOTE_ADDR')}")
+    logger.info(f"  Origin: {request.META.get('HTTP_ORIGIN')}")
+    logger.info(f"  Referer: {request.META.get('HTTP_REFERER')}")
+    logger.info(f"  Token: {token[:20]}...")
+    logger.info(f"  Cookies: {list(request.COOKIES.keys())}")
     return JsonResponse({"csrfToken": token})
 
 
