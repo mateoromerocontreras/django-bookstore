@@ -1,36 +1,37 @@
 import axios from 'axios';
 import type { ApiError } from '../types';
 
-// Use environment variable for API URL
-// On Render: should be https://django-bookstore-ed1i.onrender.com/api
-// Locally: should be http://localhost:8000/api
-const getApiUrl = (): string => {
-  // First, try environment variable (set at build time)
+// Determine API URL at runtime (not build time)
+const API_BASE_URL = (() => {
+  // First try environment variable (for explicit config)
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl && envUrl.trim()) {
+  if (envUrl && envUrl.trim() && !envUrl.includes('undefined')) {
+    console.log('Using VITE_API_URL:', envUrl);
     return envUrl;
   }
   
-  // Fallback: detect based on current origin (set at runtime)
-  if (typeof window !== 'undefined') {
+  // Otherwise detect based on current domain at runtime
+  if (typeof window !== 'undefined' && window.location) {
     const origin = window.location.origin;
+    console.log('Current origin:', origin);
     
-    // If we're on Render frontend domain, use Render backend
-    if (origin.includes('onrender.com')) {
+    // Production Render domain
+    if (origin.includes('django-bookstore-frontend.onrender.com')) {
+      console.log('Using Render production API');
       return 'https://django-bookstore-ed1i.onrender.com/api';
     }
     
-    // If localhost, use localhost backend
-    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    // Local development
+    if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('5173')) {
+      console.log('Using localhost API');
       return 'http://localhost:8000/api';
     }
   }
   
-  // Final fallback - assume production
+  // Default fallback
+  console.log('Using fallback production API');
   return 'https://django-bookstore-ed1i.onrender.com/api';
-};
-
-const API_BASE_URL = getApiUrl();
+})();
 
 // Function to get CSRF token from cookies
 function getCsrfToken(): string | null {
