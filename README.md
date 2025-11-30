@@ -1,16 +1,27 @@
 # Django Bookstore - Full Stack E-commerce Application
 
-A complete full-stack web application (it's a work in progress) for buying and selling used books, built with Django REST Framework backend and React TypeScript frontend.
+**Live Application URL:** [https://django-bookstore-frontend.onrender.com/](https://django-bookstore-frontend.onrender.com/)
 
-# To-do:
-- Dockerize
-- Further functions like notifications
-- Test security
+---
+
+A full-stack e-commerce application for buying and selling used books. The project is containerized with Docker for easy local development and deployed to Render for production.
+
+## 🚀 Deployment & Live API
+
+This project is deployed on Render. The backend API is publicly accessible.
+
+The entire application relies on a multi-service architecture defined via Docker Compose. This setup orchestrates three distinct, containerized services: the Django Backend, the PostgreSQL Database, and the React Frontend—all deployed and networked on Render for a production environment.
+
+![System Architecture: Multi-Service Deployment on Render](diagrams/System_Architecture.png "System Architecture")
+
+**API Base URL:** `https://django-bookstore-ed1i.onrender.com`
+*You can test the public endpoint for books here: https://django-bookstore-ed1i.onrender.com/api/books/*
 
 ## 🚀 Features
 
 ### Backend (Django REST Framework)
 - **RESTful API** with Django REST Framework
+- **Dockerized** for consistent development and production environments
 - **User Authentication** (register, login, logout)
 - **Book Management** (CRUD operations)
 - **Shopping Cart** functionality
@@ -22,6 +33,7 @@ A complete full-stack web application (it's a work in progress) for buying and s
 ### Frontend (React + TypeScript + Vite)
 - **Modern UI** with Tailwind CSS
 - **Book Catalog** with search and filters
+- **Containerized** for development and deployment
 - **Shopping Cart** with real-time updates
 - **User Authentication** pages
 - **Responsive Design** (mobile-friendly)
@@ -54,8 +66,9 @@ django-bookstore/
 ### Backend
 - Django 3.2.25
 - Django REST Framework 3.14.0
+- Gunicorn (for production)
 - django-cors-headers 3.10.1
-- SQLite (development)
+- PostgreSQL (for development and production)
 
 ### Frontend
 - React 19
@@ -67,18 +80,20 @@ django-bookstore/
 - Axios (HTTP client)
 - Tailwind CSS (styling)
 
-## 📦 Installation
+## 📦 Getting Started
 
 ### Prerequisites
-- Python 3.6+
+- Docker and Docker Compose
 - Node.js 18+
-- npm or yarn
+- Git
 
-### Backend Setup
+### Local Development with Docker
 
-1. **Clone the repository**
+The entire application (backend, frontend, and database) is containerized using Docker, which is the recommended way to run it locally.
+
+1.  **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/your-username/django-bookstore.git
 cd django-bookstore
 ```
 
@@ -229,4 +244,3 @@ Contributions, issues, and feature requests are welcome!
 ## 📧 Contact
 
 For questions or support, please open an issue in the repository.
-
